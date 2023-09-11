@@ -63,15 +63,10 @@ def main():
 
     # Mexico News
     st.subheader("Mexico News")
-    categories = ["business", "entertainment", "health", "science", "sports", "technology"]
-    articles = []
-    for category in categories:
-        response = fetch_headlines(newsapi_key, country="mx", category=category)
-        articles.extend(response.get("articles", []))
-
-    # Display the articles
-    for idx, article in enumerate(articles[:5]):  # Displaying top 5 from all categories combined
-        button_key = f"mexico-{idx}-{article['url']}"
+    response = fetch_headlines(newsapi_key, country="mx")
+    articles = response.get("articles", [])
+    for idx, article in enumerate(articles):
+        button_key = f"technology-{idx}-{article['url']}"
         if st.button(article['title'], key=button_key):
             summary = summarize_article(article['content'], article['description'], openai_key)
             st.write(summary)
@@ -87,6 +82,7 @@ def main():
             summary = summarize_article(article['content'], article['description'], openai_key)
             st.write(summary)
             st.write(f"[Read the full article]({article['url']})")
+
 
 if __name__ == "__main__":
     main()
