@@ -23,7 +23,7 @@ def summarize_article(content, description, openai_key):
     except openai.error.OpenAIError as e:
         return f"Error summarizing article: {str(e)}"
 
-def fetch_headlines(newsapi_key, category=None, country=None, language="en"):
+def fetch_headlines(newsapi_key, category=None, country=None, language=None):
     params = {
         "apiKey": newsapi_key,
         "pageSize": 5,
@@ -63,7 +63,7 @@ def main():
 
     # Mexico News
     st.subheader("Mexico News")
-    response = fetch_headlines(newsapi_key, country="us")
+    response = fetch_headlines(newsapi_key, country="mx")
     articles = response.get("articles", [])
     for idx, article in enumerate(articles):
         button_key = f"technology-{idx}-{article['url']}"
