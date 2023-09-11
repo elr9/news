@@ -6,6 +6,9 @@ BASE_URL = "https://newsapi.org/v2/top-headlines"
 
 def summarize_article(content, openai_key):
     openai.api_key = openai_key
+    if not content or len(content.split()) < 10:  # Check if content is too short
+        return "Insufficient content for summarization."
+
     try:
         response = openai.ChatCompletion.create(
           model="gpt-3.5-turbo",
@@ -45,7 +48,7 @@ def main():
     articles = fetch_headlines(newsapi_key)
     for article in articles:
         if st.button(article['title']):
-            summary = summarize_article(article['description'], openai_key)
+            summary = summarize_article(article['content'], openai_key)
             st.write(summary)
             st.write(f"[Read the full article]({article['url']})")
 
@@ -54,7 +57,7 @@ def main():
     articles = fetch_headlines(newsapi_key, country="mx")
     for article in articles:
         if st.button(article['title']):
-            summary = summarize_article(article['description'], openai_key)
+            summary = summarize_article(article['content'], openai_key)
             st.write(summary)
             st.write(f"[Read the full article]({article['url']})")
 
@@ -63,7 +66,7 @@ def main():
     articles = fetch_headlines(newsapi_key, category="technology")
     for article in articles:
         if st.button(article['title']):
-            summary = summarize_article(article['description'], openai_key)
+            summary = summarize_article(article['content'], openai_key)
             st.write(summary)
             st.write(f"[Read the full article]({article['url']})")
 
