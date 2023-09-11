@@ -58,7 +58,7 @@ def main():
 
     # Mexico News
     st.subheader("Mexico News")
-    response = fetch_headlines(newsapi_key, country="mx", language="es")
+    response = fetch_headlines(newsapi_key, country="mx")  # Removed the language parameter
     st.write(response)  # Display the response
     articles = response.get("articles", [])
     for idx, article in enumerate(articles):
@@ -67,6 +67,7 @@ def main():
             summary = summarize_article(article['content'], article['description'], openai_key)
             st.write(summary)
             st.write(f"[Read the full article]({article['url']})")
+
 
     # Technology News
     st.subheader("Technology News")
