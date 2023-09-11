@@ -6,12 +6,18 @@ BASE_URL = "https://newsapi.org/v2/top-headlines"
 
 def summarize_article(content, openai_key):
     openai.api_key = openai_key
-    response = openai.Completion.create(
-      engine="gpt-3.5-turbo",
-      prompt=f"Summarize the following article: {content}",
-      max_tokens=100
-    )
-    return response.choices[0].text.strip()
+    try:
+        response = openai.ChatCompletion.create(
+          model="gpt-3.5-turbo",
+          messages=[
+              {"role": "system", "content": "You are a helpful assistant."},
+              {"role": "user", "content": f"Summarize the following article: {content}"}
+          ]
+        )
+        return response['choices'][0]['message']['content'].strip()
+    except openai.error.OpenAIError as e:
+        return f"Error summarizing article: {str(e)}"
+
 
 def fetch_headlines(newsapi_key, category=None, country=None):
     params = {
