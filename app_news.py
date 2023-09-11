@@ -63,7 +63,7 @@ def main():
 
     # Mexico News
     st.subheader("Mexico News")
-    response = fetch_headlines(newsapi_key)
+    response = fetch_headlines(newsapi_key, country="fr")
     articles = response.get("articles", [])
     for idx, article in enumerate(articles):
         button_key = f"technology-{idx}-{article['url']}"
