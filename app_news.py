@@ -18,7 +18,6 @@ def summarize_article(content, openai_key):
     except openai.error.OpenAIError as e:
         return f"Error summarizing article: {str(e)}"
 
-
 def fetch_headlines(newsapi_key, category=None, country=None):
     params = {
         "apiKey": newsapi_key,
@@ -45,22 +44,28 @@ def main():
     st.subheader("International News")
     articles = fetch_headlines(newsapi_key)
     for article in articles:
-        st.write(f"[{article['title']}]({article['url']})")
-        st.write(summarize_article(article['description'], openai_key))
+        if st.button(article['title']):
+            summary = summarize_article(article['description'], openai_key)
+            st.write(summary)
+            st.write(f"[Read the full article]({article['url']})")
 
     # Mexico News
     st.subheader("Mexico News")
     articles = fetch_headlines(newsapi_key, country="mx")
     for article in articles:
-        st.write(f"[{article['title']}]({article['url']})")
-        st.write(summarize_article(article['description'], openai_key))
+        if st.button(article['title']):
+            summary = summarize_article(article['description'], openai_key)
+            st.write(summary)
+            st.write(f"[Read the full article]({article['url']})")
 
     # Technology News
     st.subheader("Technology News")
     articles = fetch_headlines(newsapi_key, category="technology")
     for article in articles:
-        st.write(f"[{article['title']}]({article['url']})")
-        st.write(summarize_article(article['description'], openai_key))
+        if st.button(article['title']):
+            summary = summarize_article(article['description'], openai_key)
+            st.write(summary)
+            st.write(f"[Read the full article]({article['url']})")
 
 if __name__ == "__main__":
     main()
