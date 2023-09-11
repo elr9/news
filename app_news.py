@@ -7,8 +7,9 @@ BASE_URL = "https://newsapi.org/v2/top-headlines"
 def summarize_article(content, description, openai_key):
     openai.api_key = openai_key
     text_to_summarize = content if content and len(content.split()) >= 10 else description
-    if not text_to_summarize or len(text_to_summarize.split()) < 10:
-        return "Insufficient content for summarization."
+    
+    if not text_to_summarize or len(text_to_summarize.split()) < 10 or text_to_summarize.lower() == "[removed]":
+        return "Insufficient content for summarization or content not available."
 
     try:
         response = openai.ChatCompletion.create(
@@ -41,6 +42,10 @@ def main():
     newsapi_key = st.sidebar.text_input("Enter your NewsAPI Key:", type="password")
     openai_key = st.sidebar.text_input("Enter your OpenAI Key:", type="password")
 
+    # Fetch Newest button
+    if st.sidebar.button("Fetch Newest"):
+        st.experimental_rerun()
+
     if not newsapi_key or not openai_key:
         st.warning("Please enter both API keys in the sidebar to fetch and summarize news.")
         return
@@ -63,7 +68,7 @@ def main():
     for category in categories:
         response = fetch_headlines(newsapi_key, country="mx", category=category)
         articles.extend(response.get("articles", []))
-    
+
     # Display the articles
     for idx, article in enumerate(articles[:5]):  # Displaying top 5 from all categories combined
         button_key = f"mexico-{idx}-{article['url']}"
@@ -71,7 +76,6 @@ def main():
             summary = summarize_article(article['content'], article['description'], openai_key)
             st.write(summary)
             st.write(f"[Read the full article]({article['url']})")
-
 
     # Technology News
     st.subheader("Technology News")
