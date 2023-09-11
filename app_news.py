@@ -33,7 +33,6 @@ def fetch_headlines(newsapi_key, category=None, country=None, language="en"):
     response = requests.get(BASE_URL, params=params)
     return response.json()
 
-
 def main():
     st.title("Top 5 Headlines")
 
@@ -48,7 +47,8 @@ def main():
 
     # International News
     st.subheader("International News")
-    articles = fetch_headlines(newsapi_key, language="en")
+    response = fetch_headlines(newsapi_key, language="en")
+    articles = response.get("articles", [])
     for idx, article in enumerate(articles):
         button_key = f"international-{idx}-{article['url']}"
         if st.button(article['title'], key=button_key):
@@ -68,10 +68,10 @@ def main():
             st.write(summary)
             st.write(f"[Read the full article]({article['url']})")
 
-
     # Technology News
     st.subheader("Technology News")
-    articles = fetch_headlines(newsapi_key, category="technology", language="en")
+    response = fetch_headlines(newsapi_key, category="technology", language="en")
+    articles = response.get("articles", [])
     for idx, article in enumerate(articles):
         button_key = f"technology-{idx}-{article['url']}"
         if st.button(article['title'], key=button_key):
