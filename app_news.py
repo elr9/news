@@ -4,9 +4,13 @@ import openai
 
 BASE_URL = "https://newsapi.org/v2/top-headlines"
 
-def summarize_article(content, openai_key):
+def summarize_article(content, description, openai_key):
     openai.api_key = openai_key
-    if not content or len(content.split()) < 10:  # Check if content is too short
+    
+    # Prioritize content, but fall back to description if content is too short
+    text_to_summarize = content if content and len(content.split()) >= 10 else description
+    
+    if not text_to_summarize or len(text_to_summarize.split()) < 10:
         return "Insufficient content for summarization."
 
     try:
@@ -14,19 +18,20 @@ def summarize_article(content, openai_key):
           model="gpt-3.5-turbo",
           messages=[
               {"role": "system", "content": "You are a helpful assistant."},
-              {"role": "user", "content": f"Summarize the following article: {content}"}
+              {"role": "user", "content": f"Summarize the following article: {text_to_summarize}"}
           ]
         )
         return response['choices'][0]['message']['content'].strip()
     except openai.error.OpenAIError as e:
         return f"Error summarizing article: {str(e)}"
 
-def fetch_headlines(newsapi_key, category=None, country=None):
+def fetch_headlines(newsapi_key, category=None, country=None, language="en"):
     params = {
         "apiKey": newsapi_key,
         "pageSize": 5,
         "category": category,
-        "country": country
+        "country": country,
+        "language": language
     }
     response = requests.get(BASE_URL, params=params)
     return response.json().get("articles", [])
@@ -45,28 +50,28 @@ def main():
 
     # International News
     st.subheader("International News")
-    articles = fetch_headlines(newsapi_key)
+    articles = fetch_headlines(newsapi_key, language="en")
     for article in articles:
         if st.button(article['title']):
-            summary = summarize_article(article['content'], openai_key)
+            summary = summarize_article(article['content'], article['description'], openai_key)
             st.write(summary)
             st.write(f"[Read the full article]({article['url']})")
 
     # Mexico News
     st.subheader("Mexico News")
-    articles = fetch_headlines(newsapi_key, country="mx")
+    articles = fetch_headlines(newsapi_key, country="mx", language="es")
     for article in articles:
         if st.button(article['title']):
-            summary = summarize_article(article['content'], openai_key)
+            summary = summarize_article(article['content'], article['description'], openai_key)
             st.write(summary)
             st.write(f"[Read the full article]({article['url']})")
 
     # Technology News
     st.subheader("Technology News")
-    articles = fetch_headlines(newsapi_key, category="technology")
+    articles = fetch_headlines(newsapi_key, category="technology", language="en")
     for article in articles:
         if st.button(article['title']):
-            summary = summarize_article(article['content'], openai_key)
+            summary = summarize_article(article['content'], article['description'], openai_key)
             st.write(summary)
             st.write(f"[Read the full article]({article['url']})")
 
