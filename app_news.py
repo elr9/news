@@ -58,10 +58,14 @@ def main():
 
     # Mexico News
     st.subheader("Mexico News")
-    response = fetch_headlines(newsapi_key, country="mx")  # Removed the language parameter
-    st.write(response)  # Display the response
-    articles = response.get("articles", [])
-    for idx, article in enumerate(articles):
+    categories = ["business", "entertainment", "health", "science", "sports", "technology"]
+    articles = []
+    for category in categories:
+        response = fetch_headlines(newsapi_key, country="mx", category=category)
+        articles.extend(response.get("articles", []))
+    
+    # Display the articles
+    for idx, article in enumerate(articles[:5]):  # Displaying top 5 from all categories combined
         button_key = f"mexico-{idx}-{article['url']}"
         if st.button(article['title'], key=button_key):
             summary = summarize_article(article['content'], article['description'], openai_key)
