@@ -45,35 +45,36 @@ def main():
         st.warning("Please enter both API keys in the sidebar to fetch and summarize news.")
         return
 
-    # International News
-    st.subheader("International News")
-    articles = fetch_headlines(newsapi_key, language="en")
-    for article in articles:
-        button_key = f"international-{article['url']}"
-        if st.button(article['title'], key=button_key):
-            summary = summarize_article(article['content'], article['description'], openai_key)
-            st.write(summary)
-            st.write(f"[Read the full article]({article['url']})")
+# International News
+st.subheader("International News")
+articles = fetch_headlines(newsapi_key, language="en")
+for idx, article in enumerate(articles):
+    button_key = f"international-{idx}-{article['url']}"
+    if st.button(article['title'], key=button_key):
+        summary = summarize_article(article['content'], article['description'], openai_key)
+        st.write(summary)
+        st.write(f"[Read the full article]({article['url']})")
 
-    # Mexico News
-    st.subheader("Mexico News")
-    articles = fetch_headlines(newsapi_key, country="mx", language="es")
-    for article in articles:
-        button_key = f"mexico-{article['url']}"
-        if st.button(article['title'], key=button_key):
-            summary = summarize_article(article['content'], article['description'], openai_key)
-            st.write(summary)
-            st.write(f"[Read the full article]({article['url']})")
+# Mexico News
+st.subheader("Mexico News")
+articles = fetch_headlines(newsapi_key, country="mx", language="es")
+for idx, article in enumerate(articles):
+    button_key = f"mexico-{idx}-{article['url']}"
+    if st.button(article['title'], key=button_key):
+        summary = summarize_article(article['content'], article['description'], openai_key)
+        st.write(summary)
+        st.write(f"[Read the full article]({article['url']})")
 
-    # Technology News
-    st.subheader("Technology News")
-    articles = fetch_headlines(newsapi_key, category="technology", language="en")
-    for article in articles:
-        button_key = f"technology-{article['url']}"
-        if st.button(article['title'], key=button_key):
-            summary = summarize_article(article['content'], article['description'], openai_key)
-            st.write(summary)
-            st.write(f"[Read the full article]({article['url']})")
+# Technology News
+st.subheader("Technology News")
+articles = fetch_headlines(newsapi_key, category="technology", language="en")
+for idx, article in enumerate(articles):
+    button_key = f"technology-{idx}-{article['url']}"
+    if st.button(article['title'], key=button_key):
+        summary = summarize_article(article['content'], article['description'], openai_key)
+        st.write(summary)
+        st.write(f"[Read the full article]({article['url']})")
+
 
 if __name__ == "__main__":
     main()
