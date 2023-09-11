@@ -6,10 +6,7 @@ BASE_URL = "https://newsapi.org/v2/top-headlines"
 
 def summarize_article(content, description, openai_key):
     openai.api_key = openai_key
-    
-    # Prioritize content, but fall back to description if content is too short
     text_to_summarize = content if content and len(content.split()) >= 10 else description
-    
     if not text_to_summarize or len(text_to_summarize.split()) < 10:
         return "Insufficient content for summarization."
 
@@ -48,35 +45,35 @@ def main():
         st.warning("Please enter both API keys in the sidebar to fetch and summarize news.")
         return
 
-# International News
-st.subheader("International News")
-articles = fetch_headlines(newsapi_key, language="en")
-for article in articles:
-    button_key = f"international-{article['url']}"
-    if st.button(article['title'], key=button_key):
-        summary = summarize_article(article['content'], article['description'], openai_key)
-        st.write(summary)
-        st.write(f"[Read the full article]({article['url']})")
+    # International News
+    st.subheader("International News")
+    articles = fetch_headlines(newsapi_key, language="en")
+    for article in articles:
+        button_key = f"international-{article['url']}"
+        if st.button(article['title'], key=button_key):
+            summary = summarize_article(article['content'], article['description'], openai_key)
+            st.write(summary)
+            st.write(f"[Read the full article]({article['url']})")
 
-# Mexico News
-st.subheader("Mexico News")
-articles = fetch_headlines(newsapi_key, country="mx", language="es")
-for article in articles:
-    button_key = f"mexico-{article['url']}"
-    if st.button(article['title'], key=button_key):
-        summary = summarize_article(article['content'], article['description'], openai_key)
-        st.write(summary)
-        st.write(f"[Read the full article]({article['url']})")
+    # Mexico News
+    st.subheader("Mexico News")
+    articles = fetch_headlines(newsapi_key, country="mx", language="es")
+    for article in articles:
+        button_key = f"mexico-{article['url']}"
+        if st.button(article['title'], key=button_key):
+            summary = summarize_article(article['content'], article['description'], openai_key)
+            st.write(summary)
+            st.write(f"[Read the full article]({article['url']})")
 
-# Technology News
-st.subheader("Technology News")
-articles = fetch_headlines(newsapi_key, category="technology", language="en")
-for article in articles:
-    button_key = f"technology-{article['url']}"
-    if st.button(article['title'], key=button_key):
-        summary = summarize_article(article['content'], article['description'], openai_key)
-        st.write(summary)
-        st.write(f"[Read the full article]({article['url']})")
+    # Technology News
+    st.subheader("Technology News")
+    articles = fetch_headlines(newsapi_key, category="technology", language="en")
+    for article in articles:
+        button_key = f"technology-{article['url']}"
+        if st.button(article['title'], key=button_key):
+            summary = summarize_article(article['content'], article['description'], openai_key)
+            st.write(summary)
+            st.write(f"[Read the full article]({article['url']})")
 
 if __name__ == "__main__":
     main()
